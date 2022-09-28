@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const argon2 = require("argon2");
 // const userSchema = new mongoose.Schema({
 //   _id: mongoose.Schema.Types.ObjectId,
 //   name: String,
@@ -13,8 +14,23 @@ const mongoose = require("mongoose");
 // });
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  password: String,
+  firstname: { type: String, required: true },
+  lastname: { type: String, required: true },
+  email: {
+    type: String,
+    required: [true, "Enter an email address."],
+    unique: [true, "That email address is taken."],
+  },
+  password: { type: String, required: true },
+});
+
+userSchema.pre("save", async function (next) {
+  try {
+    this.password = await argon2.hash(this.password);
+    next();
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 module.exports = mongoose.model("User", userSchema);
