@@ -1,5 +1,6 @@
 const User = require("../Models/user");
 const argon2 = require("argon2");
+
 const userRegister = async (req, res) => {
   let resStatusCode = 200;
   let resMessage = "User created successfully.";
@@ -28,6 +29,36 @@ const userRegister = async (req, res) => {
   }
 };
 
+const userRegisterAuth = async (req, res) => {
+  let resStatusCode = 200;
+  let resMessage = "User created successfully.";
+  try {
+    const { name, email, image } = req.body;
+    const [firstname, lastname] = name.split(" ");
+
+    User.init();
+    response = await User.create({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: "",
+      image: image,
+    });
+    return res.status(resStatusCode).send(resMessage);
+  } catch (error) {
+    resStatusCode = 500;
+    resMessage = "An unknown error occurred.";
+    if (error.code === 11000) {
+      resStatusCode = 200;
+      resMessage = "User logged in successfully.";
+    } else if (error.name === "ValidationError") {
+      resStatusCode = 422;
+      resMessage = "Required fields are missing.";
+    }
+    return res.status(resStatusCode).send(resMessage);
+  }
+};
+
 const userLogin = async (req, res) => {
   try {
     User.init();
@@ -51,4 +82,26 @@ const userLogin = async (req, res) => {
   }
 };
 
-module.exports = { userRegister, userLogin };
+const userLoginAuth = async (req, res) => {
+  try {
+    User.init();
+    const { email } = req.body;
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      await userRegisterAuth(req, res);
+    } else {
+    }
+    return res.status(200).send("Login success.");
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      resStatusCode = 422;
+      resMessage = "Required fields are missing.";
+    } else {
+      resStatusCode = 500;
+      resMessage = "An unknown error occurred.";
+    }
+    res.status(resStatusCode).send(resMessage);
+  }
+};
+
+module.exports = { userRegister, userRegisterAuth, userLogin, userLoginAuth };

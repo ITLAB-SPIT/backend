@@ -21,7 +21,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "Enter an email address."],
     unique: [true, "That email address is taken."],
   },
-  password: { type: String, required: true },
+  password: { type: String },
+  image: { type: String },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: String },
 });
 
 userSchema.pre("save", async function (next) {
