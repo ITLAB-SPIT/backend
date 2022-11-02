@@ -1,6 +1,7 @@
 const userControllers = require("../Controllers/users.controllers");
+const blogControllers = require("../Controllers/blogs.controllers");
 const passwordControllers = require("../Controllers/password.controllers");
-const bodyParser = require("body-parser").json();
+const bodyParser = require("body-parser").json({ limit: "50mb" });
 const router = require("express").Router();
 
 router.post("/signup", bodyParser, userControllers.userRegister);
@@ -14,5 +15,6 @@ router.get(
   passwordControllers.validatePasswordResetToken
 );
 router.post("/reset-password", bodyParser, passwordControllers.resetPassword);
-
+router.post("/create-blog", bodyParser, blogControllers.createBlog);
+router.get("/blogsData", blogControllers.getAllBlogs);
 module.exports = router;
