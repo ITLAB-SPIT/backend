@@ -21,17 +21,17 @@ const userRegister = async (req, res) => {
       password: password,
     });
 
-    // const token = generateAccessToken({ email: email });
-    // //cookie generating from server
-    // const serialised = serialize("OursiteJWT", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV !== "development",
-    //   sameSite: "strict",
-    //   maxAge: 1800,
-    //   path: "/",
-    // });
-    // //cookie setting in response, so that it can be stored in browser
-    // res.setHeader("Set-Cookie", serialised);
+    const token = generateAccessToken({ email: email });
+    //cookie generating from server
+    const serialised = serialize("OursiteJWT", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      maxAge: 1800,
+      path: "/",
+    });
+    //cookie setting in response, so that it can be stored in browser
+    res.setHeader("Set-Cookie", serialised);
 
     return res.status(resStatusCode).json({
       message: resMessage,
@@ -102,17 +102,17 @@ const userLogin = async (req, res) => {
 
     if (await argon2.verify(user.password, password)) {
       // password match
-      // const token = generateAccessToken({ email: email });
-      // //cookie generating from server
-      // const serialised = serialize("OursiteJWT", token, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV !== "development",
-      //   sameSite: "strict",
-      //   maxAge: 1800,
-      //   path: "/",
-      // });
-      // //cookie setting in response, so that it can be stored in browser
-      // res.setHeader("Set-Cookie", serialised);
+      const token = generateAccessToken({ email: email });
+      //cookie generating from server
+      const serialised = serialize("OursiteJWT", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: "strict",
+        maxAge: 1800,
+        path: "/",
+      });
+      //cookie setting in response, so that it can be stored in browser
+      res.setHeader("Set-Cookie", serialised);
 
       return res.status(200).json({
         message: "Login success.",

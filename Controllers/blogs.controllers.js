@@ -65,4 +65,15 @@ const getAllBlogs = async (req, res) => {
   }
 };
 
-module.exports = { createBlog, getAllBlogs };
+const deleteBlog = async (req, res) => {
+  try {
+    const { title } = req.params;
+    await Blog.findOneAndDelete({ title: title });
+    return res.status(200).send("Blog deleted successfully.");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("An unknown error occurred.");
+  }
+};
+
+module.exports = { createBlog, getAllBlogs, deleteBlog };

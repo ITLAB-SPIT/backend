@@ -9,12 +9,21 @@ router.post("/signupauth", bodyParser, userControllers.userRegisterAuth);
 router.post("/login", bodyParser, userControllers.userLogin);
 router.post("/loginauth", bodyParser, userControllers.userLoginAuth);
 router.post("/forgot-password", bodyParser, passwordControllers.forgotPassword);
+router.post("/create-blog", bodyParser, blogControllers.createBlog);
+
 router.get(
   "/reset-password",
   bodyParser,
   passwordControllers.validatePasswordResetToken
 );
-router.post("/reset-password", bodyParser, passwordControllers.resetPassword);
-router.post("/create-blog", bodyParser, blogControllers.createBlog);
 router.get("/blogsData", blogControllers.getAllBlogs);
+
+router.patch("/reset-password", bodyParser, passwordControllers.resetPassword);
+
+// router.put("/forgot-password", bodyParser, passwordControllers.forgotPassword);
+// router.put("/create-blog", bodyParser, blogControllers.createBlog);
+
+// router.delete("/delete-user", bodyParser, userControllers.deleteUser);
+router.delete("/delete-blog", bodyParser, blogControllers.deleteBlog);
+
 module.exports = router;
