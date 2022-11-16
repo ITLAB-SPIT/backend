@@ -23,18 +23,19 @@ const userRegister = async (req, res) => {
 
     const token = generateAccessToken({ email: email });
     //cookie generating from server
-    const serialised = serialize("OursiteJWT", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
-      maxAge: 1800,
-      path: "/",
-    });
-    //cookie setting in response, so that it can be stored in browser
-    res.setHeader("Set-Cookie", serialised);
+    // const serialised = serialize("OursiteJWT", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV !== "development",
+    //   sameSite: "strict",
+    //   maxAge: 1800,
+    //   path: "/",
+    // });
+    // //cookie setting in response, so that it can be stored in browser
+    // res.setHeader("Set-Cookie", serialised);
 
     return res.status(resStatusCode).json({
       message: resMessage,
+      token: token,
     });
   } catch (error) {
     if (error.code === 11000) {
@@ -50,6 +51,7 @@ const userRegister = async (req, res) => {
 
     return res.status(resStatusCode).json({
       message: resMessage,
+      token: "",
     });
   }
 };
@@ -59,10 +61,11 @@ const userRegisterAuth = async (req, res) => {
   let resMessage = "User created successfully.";
 
   try {
+    User.init();
     const { name, email, image } = req.body;
     const [firstname, lastname] = name.split(" ");
+    const token = generateAccessToken({ email: email });
 
-    User.init();
     response = await User.create({
       firstname: firstname,
       lastname: lastname,
@@ -73,6 +76,7 @@ const userRegisterAuth = async (req, res) => {
 
     return res.status(resStatusCode).json({
       message: resMessage,
+      token: token,
     });
   } catch (error) {
     resStatusCode = 500;
@@ -97,22 +101,28 @@ const userLogin = async (req, res) => {
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials." });
+      return res
+        .status(401)
+        .json({ message: "Invalid credentials.", token: "" });
     }
 
     if (await argon2.verify(user.password, password)) {
       // password match
       const token = generateAccessToken({ email: email });
       //cookie generating from server
-      const serialised = serialize("OursiteJWT", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: "strict",
-        maxAge: 1800,
-        path: "/",
-      });
+
+      // console.log("token");
+      // console.log(token);
+
+      // const serialised = serialize("OursiteJWT", token, {
+      //   httpOnly: true,
+      //   secure: process.env.NODE_ENV !== "development",
+      //   sameSite: "strict",
+      //   maxAge: 1800,
+      //   path: "/",
+      // });
       //cookie setting in response, so that it can be stored in browser
-      res.setHeader("Set-Cookie", serialised);
+      // res.setHeader("Set-Cookie", serialised);
 
       return res.status(200).json({
         message: "Login success.",
@@ -120,15 +130,20 @@ const userLogin = async (req, res) => {
         firstname: user.firstname,
         lastname: user.lastname,
         image: user.image,
+        token: token,
       });
     } else {
       // password did not match
       console.log("Password didnt match.");
-      return res.status(401).json({ message: "Invalid credentials." });
+      return res
+        .status(401)
+        .json({ message: "Invalid credentials.", token: "" });
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "An unknown error occurred." });
+    return res
+      .status(500)
+      .json({ message: "An unknown error occurred.", token: "" });
   }
 };
 
@@ -137,12 +152,12 @@ const userLoginAuth = async (req, res) => {
     User.init();
     const { email } = req.body;
     const user = await User.findOne({ email: email });
-
+    const token = generateAccessToken({ email: email });
     if (!user) {
       await userRegisterAuth(req, res);
     }
 
-    return res.status(200).json({ message: "Login success." });
+    return res.status(200).json({ message: "Login success.", token: token });
   } catch (error) {
     if (error.name === "ValidationError") {
       resStatusCode = 422;
@@ -152,7 +167,7 @@ const userLoginAuth = async (req, res) => {
       resMessage = "An unknown error occurred.";
     }
 
-    return res.status(resStatusCode).json({ message: resMessage });
+    return res.status(resStatusCode).json({ message: resMessage, token: "" });
   }
 };
 
