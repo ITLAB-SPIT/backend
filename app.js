@@ -1,10 +1,13 @@
 const express = require("express");
+const next = require("next");
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = 8000;
 const mongoose = require("mongoose");
 const cors = require("cors");
 const router = require("./Routes/users.routes");
 const errorController = require("./Controllers/errorController");
+const bodyParser = require("body-parser");
 require("dotenv").config();
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -14,6 +17,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 app.use(cors());
 app.use(router);
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json());
 // app.use(errorController);
 
 app.listen(port, () => {
