@@ -3,6 +3,7 @@ const blogControllers = require("../Controllers/blogs.controllers");
 const newsControllers = require("../Controllers/news.controllers");
 const passwordControllers = require("../Controllers/password.controllers");
 const translateControllers = require("../Controllers/translator.controllers");
+const contactInterviewExperiencesControllers = require("../Controllers/contactInterviewExperiences.controllers");
 const bodyParser = require("body-parser").json({ limit: "50mb" });
 const router = require("express").Router();
 
@@ -13,6 +14,16 @@ router.post("/loginauth", bodyParser, userControllers.userLoginAuth);
 router.post("/forgot-password", bodyParser, passwordControllers.forgotPassword);
 router.post("/create-blog", bodyParser, blogControllers.createBlog);
 router.post("/translate", bodyParser, translateControllers.translate);
+router.post(
+  "/contact-interview-experiences",
+  bodyParser,
+  contactInterviewExperiencesControllers.addQuery
+);
+router.post(
+  "/news-subscription",
+  bodyParser,
+  contactInterviewExperiencesControllers.newsSubscription
+);
 
 router.get(
   "/reset-password",

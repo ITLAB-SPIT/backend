@@ -1,7 +1,7 @@
 const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
 const { serialize } = require("cookie");
-const argon2 = require("argon2");
+const argon2 = require("argon2"); // argon is used to hash the password
 require("dotenv").config();
 
 const generateAccessToken = (email) => {
@@ -22,16 +22,6 @@ const userRegister = async (req, res) => {
     });
 
     const token = generateAccessToken({ email: email });
-    //cookie generating from server
-    // const serialised = serialize("OursiteJWT", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV !== "development",
-    //   sameSite: "strict",
-    //   maxAge: 1800,
-    //   path: "/",
-    // });
-    // //cookie setting in response, so that it can be stored in browser
-    // res.setHeader("Set-Cookie", serialised);
 
     return res.status(resStatusCode).json({
       message: resMessage,

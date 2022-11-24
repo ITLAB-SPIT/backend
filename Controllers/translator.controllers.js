@@ -2,6 +2,7 @@ require("dotenv").config();
 var googleTranslate = require("google-translate")(
   process.env.GOOGLE_TRANSLATION_API_KEY
 );
+
 const translate = async (req, res) => {
   try {
     const data = req.body.data;

@@ -1,8 +1,8 @@
+require("dotenv").config();
 const User = require("../Models/user");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const argon2 = require("argon2");
-require("dotenv").config();
 
 const forgotPassword = async (req, res) => {
   let status = 200;
