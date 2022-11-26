@@ -1,7 +1,7 @@
 const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
-const { serialize } = require("cookie");
 const argon2 = require("argon2"); // argon is used to hash the password
+const { getAllBlogTitles } = require("./blogs.controllers");
 require("dotenv").config();
 
 const generateAccessToken = (email) => {
@@ -22,10 +22,11 @@ const userRegister = async (req, res) => {
     });
 
     const token = generateAccessToken({ email: email });
-
+    const blogTitles = await getAllBlogTitles();
     return res.status(resStatusCode).json({
       message: resMessage,
       token: token,
+      blogTitles: blogTitles,
     });
   } catch (error) {
     if (error.code === 11000) {
@@ -63,10 +64,12 @@ const userRegisterAuth = async (req, res) => {
       password: "",
       image: image,
     });
+    const blogTitles = await getAllBlogTitles();
 
     return res.status(resStatusCode).json({
       message: resMessage,
       token: token,
+      blogTitles: blogTitles,
     });
   } catch (error) {
     resStatusCode = 500;
@@ -99,21 +102,7 @@ const userLogin = async (req, res) => {
     if (await argon2.verify(user.password, password)) {
       // password match
       const token = generateAccessToken({ email: email });
-      //cookie generating from server
-
-      // console.log("token");
-      // console.log(token);
-
-      // const serialised = serialize("OursiteJWT", token, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV !== "development",
-      //   sameSite: "strict",
-      //   maxAge: 1800,
-      //   path: "/",
-      // });
-      //cookie setting in response, so that it can be stored in browser
-      // res.setHeader("Set-Cookie", serialised);
-
+      const blogTitles = await getAllBlogTitles();
       return res.status(200).json({
         message: "Login success.",
         email: user.email,
@@ -121,6 +110,7 @@ const userLogin = async (req, res) => {
         lastname: user.lastname,
         image: user.image,
         token: token,
+        blogTitles: blogTitles,
       });
     } else {
       // password did not match
@@ -146,8 +136,14 @@ const userLoginAuth = async (req, res) => {
     if (!user) {
       await userRegisterAuth(req, res);
     }
-
-    return res.status(200).json({ message: "Login success.", token: token });
+    const blogTitles = await getAllBlogTitles();
+    return res
+      .status(200)
+      .json({
+        message: "Login success.",
+        token: token,
+        blogTitles: blogTitles,
+      });
   } catch (error) {
     if (error.name === "ValidationError") {
       resStatusCode = 422;

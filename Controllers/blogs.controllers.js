@@ -107,4 +107,14 @@ const deleteBlog = async (req, res) => {
   });
 };
 
-module.exports = { createBlog, getAllBlogs, deleteBlog };
+const getAllBlogTitles = async () => {
+  try {
+    const blogs = await Blog.find({}, { title: 1, _id: 0 });
+    return blogs;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+module.exports = { createBlog, getAllBlogs, deleteBlog, getAllBlogTitles };
