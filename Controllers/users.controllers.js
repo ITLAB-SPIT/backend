@@ -111,6 +111,10 @@ const userLogin = async (req, res) => {
         image: user.image,
         token: token,
         blogTitles: blogTitles,
+        linkedinUrl: user.linkedinUrl,
+        githubUrl: user.githubUrl,
+        about: user.about,
+        workExperience: user.workExperience,
       });
     } else {
       // password did not match
@@ -137,13 +141,11 @@ const userLoginAuth = async (req, res) => {
       await userRegisterAuth(req, res);
     }
     const blogTitles = await getAllBlogTitles();
-    return res
-      .status(200)
-      .json({
-        message: "Login success.",
-        token: token,
-        blogTitles: blogTitles,
-      });
+    return res.status(200).json({
+      message: "Login success.",
+      token: token,
+      blogTitles: blogTitles,
+    });
   } catch (error) {
     if (error.name === "ValidationError") {
       resStatusCode = 422;
@@ -157,4 +159,63 @@ const userLoginAuth = async (req, res) => {
   }
 };
 
-module.exports = { userRegister, userRegisterAuth, userLogin, userLoginAuth };
+const updateBasicUserInfo = async (req, res) => {
+  try {
+    User.init();
+    jwt.verify(req.body.token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: "Forbidden." });
+      } else {
+        const { firstname, lastname, imageUrl } = req.body;
+        const email = decoded.email;
+        await User.updateOne(
+          { email: email },
+          { firstname: firstname, lastname: lastname, image: imageUrl }
+        );
+        return res
+          .status(200)
+          .json({ message: "User info updated successfully." });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "An unknown error occurred." });
+  }
+};
+
+const updateProfessionalInfo = async (req, res) => {
+  try {
+    User.init();
+    jwt.verify(req.body.token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        console.log(err);
+        return res.status(403).json({ message: "Forbidden." });
+      } else {
+        const { linkedinUrl, githubUrl, about, workExperience } = req.body;
+        const email = decoded.email;
+        await User.updateOne(
+          { email: email },
+          {
+            linkedinUrl: linkedinUrl,
+            githubUrl: githubUrl,
+            about: about,
+            workExperience: workExperience,
+          }
+        );
+        return res.status(200).json({ message: "User info updated." });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "An unknown error occurred." });
+  }
+};
+
+module.exports = {
+  userRegister,
+  userRegisterAuth,
+  userLogin,
+  userLoginAuth,
+  updateBasicUserInfo,
+  updateProfessionalInfo,
+};

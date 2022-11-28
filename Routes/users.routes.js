@@ -34,6 +34,22 @@ router.get("/blogsData", blogControllers.getAllBlogs);
 router.get("/news", bodyParser, newsControllers.getNews);
 
 router.patch("/reset-password", bodyParser, passwordControllers.resetPassword);
+router.patch(
+  "/update-prof-info",
+  bodyParser,
+  userControllers.updateProfessionalInfo
+);
+router.patch(
+  "/update-user-info",
+  bodyParser,
+  userControllers.updateBasicUserInfo
+);
+
+router.patch(
+  "/reset-password-setting",
+  bodyParser,
+  passwordControllers.resetPasswordSetting
+);
 
 // router.put("/forgot-password", bodyParser, passwordControllers.forgotPassword);
 // router.put("/create-blog", bodyParser, blogControllers.createBlog);

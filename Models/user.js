@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
   },
   password: { type: String },
   image: { type: String },
+  linkedinUrl: { type: String },
+  githubUrl: { type: String },
+  about: { type: String },
+  workExperience: { type: String },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: String },
 });
