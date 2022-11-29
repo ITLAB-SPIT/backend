@@ -1,18 +1,6 @@
 const mongoose = require("mongoose");
 
 const argon2 = require("argon2");
-// const userSchema = new mongoose.Schema({
-//   _id: mongoose.Schema.Types.ObjectId,
-//   name: String,
-//   email: {
-//     type: String,
-//     lowercase: true,
-//     match: /[a-z0–9!#$%&’*+/=?^_`{|}~-]+(?:\.[a-z0–9!#$%&’*+/=?                  ^_`{|}~-]+)*@(?:[a-z0–9](?:[a-z0–9-]*[a-z0–9])?\.)+[a-z0–9](?:[a-z0–  9-]*[a-z0–9])?/,
-//   },
-//   password: String,
-//   phone_number: Number,
-// });
-
 const userSchema = new mongoose.Schema({
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
@@ -34,9 +22,9 @@ const userSchema = new mongoose.Schema({
     default:
       "Student at Bhartiya Vidya Bhavans Sardar Patel Institute of Technology Munshi Nagar Andheri Mumbai",
   },
-  workExperience: { type: String },
-  currentlyWorkingAt: { type: String },
-  profession: { type: String },
+  workExperience: { type: String, default: "Give me job first" },
+  currentlyWorkingAt: { type: String, default: "MySelf" },
+  profession: { type: String, default: "Student" },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: String },
   yearsOfExperience: { type: String },
