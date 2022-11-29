@@ -115,6 +115,17 @@ const userLogin = async (req, res) => {
         githubUrl: user.githubUrl,
         about: user.about,
         workExperience: user.workExperience,
+        currentlyWorkingAt: user.currentlyWorkingAt,
+        profession: user.profession,
+        yearsOfExperience: user.yearsOfExperience,
+        resumeUrl: user.resumeUrl,
+        fieldOfExpertise: user.fieldOfExpertise,
+        skills: user.skills,
+        hackathonWins: user.hackathonWins,
+        problemsSolved: user.problemsSolved,
+        projects: user.projects,
+        codechefRating: user.codechefRating,
+        leetcodeRating: user.leetcodeRating,
       });
     } else {
       // password did not match
@@ -191,7 +202,14 @@ const updateProfessionalInfo = async (req, res) => {
         console.log(err);
         return res.status(403).json({ message: "Forbidden." });
       } else {
-        const { linkedinUrl, githubUrl, about, workExperience } = req.body;
+        const {
+          currentlyWorkingAt,
+          linkedinUrl,
+          githubUrl,
+          about,
+          workExperience,
+          profession,
+        } = req.body;
         const email = decoded.email;
         await User.updateOne(
           { email: email },
@@ -200,6 +218,8 @@ const updateProfessionalInfo = async (req, res) => {
             githubUrl: githubUrl,
             about: about,
             workExperience: workExperience,
+            currentlyWorkingAt: currentlyWorkingAt,
+            profession: profession,
           }
         );
         return res.status(200).json({ message: "User info updated." });
@@ -211,6 +231,48 @@ const updateProfessionalInfo = async (req, res) => {
   }
 };
 
+const setAchievementsAndSkills = async (req, res) => {
+  try {
+    User.init();
+    jwt.verify(req.body.token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ message: "Forbidden." });
+      } else {
+        const {
+          yearsOfExperience,
+          resumeUrl,
+          fieldOfExpertise,
+          skills,
+          hackathonWins,
+          problemsSolved,
+          projects,
+          codechefRating,
+          leetcodeRating,
+        } = req.body;
+        const email = decoded.email;
+        await User.updateOne(
+          { email: email },
+          {
+            yearsOfExperience: yearsOfExperience,
+            resumeUrl: resumeUrl,
+            fieldOfExpertise: fieldOfExpertise,
+            skills: skills,
+            hackathonWins: hackathonWins,
+            problemsSolved: problemsSolved,
+            projects: projects,
+            codechefRating: codechefRating,
+            leetcodeRating: leetcodeRating,
+          }
+        );
+        return res.status(200).json({ message: "User info updated." });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "An unknown error occurred." });
+  }
+};
+
 module.exports = {
   userRegister,
   userRegisterAuth,
@@ -218,4 +280,5 @@ module.exports = {
   userLoginAuth,
   updateBasicUserInfo,
   updateProfessionalInfo,
+  setAchievementsAndSkills,
 };

@@ -27,8 +27,19 @@ const userSchema = new mongoose.Schema({
   githubUrl: { type: String },
   about: { type: String },
   workExperience: { type: String },
+  currentlyWorkingAt: { type: String },
+  profession: { type: String },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: String },
+  yearsOfExperience: { type: String },
+  resumeUrl: { type: String },
+  fieldOfExpertise: { type: String },
+  skills: { type: [String], default: ["", "", "", ""] },
+  hackathonWins: { type: String },
+  problemsSolved: { type: String },
+  projects: { type: String },
+  codechefRating: { type: String },
+  leetcodeRating: { type: String },
 });
 
 userSchema.pre("save", async function (next) {

@@ -35,6 +35,11 @@ router.get("/news", bodyParser, newsControllers.getNews);
 
 router.patch("/reset-password", bodyParser, passwordControllers.resetPassword);
 router.patch(
+  "/set-achievements-and-skills",
+  bodyParser,
+  userControllers.setAchievementsAndSkills
+);
+router.patch(
   "/update-prof-info",
   bodyParser,
   userControllers.updateProfessionalInfo
