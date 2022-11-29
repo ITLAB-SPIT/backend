@@ -21,11 +21,19 @@ const userSchema = new mongoose.Schema({
     required: [true, "Enter an email address."],
     unique: [true, "That email address is taken."],
   },
+  tag: {
+    type: String,
+    default: "Speak Write Think",
+  },
   password: { type: String },
   image: { type: String },
   linkedinUrl: { type: String },
   githubUrl: { type: String },
-  about: { type: String },
+  about: {
+    type: String,
+    default:
+      "Student at Bhartiya Vidya Bhavans Sardar Patel Institute of Technology Munshi Nagar Andheri Mumbai",
+  },
   workExperience: { type: String },
   currentlyWorkingAt: { type: String },
   profession: { type: String },

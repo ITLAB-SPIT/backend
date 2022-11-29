@@ -110,6 +110,7 @@ const userLogin = async (req, res) => {
         lastname: user.lastname,
         image: user.image,
         token: token,
+        tag: user.tag,
         blogTitles: blogTitles,
         linkedinUrl: user.linkedinUrl,
         githubUrl: user.githubUrl,
@@ -177,11 +178,17 @@ const updateBasicUserInfo = async (req, res) => {
       if (err) {
         return res.status(403).json({ message: "Forbidden." });
       } else {
-        const { firstname, lastname, imageUrl } = req.body;
+        console.log("in");
+        const { firstname, lastname, imageUrl, tag } = req.body;
         const email = decoded.email;
         await User.updateOne(
           { email: email },
-          { firstname: firstname, lastname: lastname, image: imageUrl }
+          {
+            firstname: firstname,
+            lastname: lastname,
+            image: imageUrl,
+            tag: tag,
+          }
         );
         return res
           .status(200)
