@@ -1,9 +1,11 @@
 const userControllers = require("../Controllers/users.controllers");
+const commentsControllers = require("../Controllers/comments.controllers");
 const blogControllers = require("../Controllers/blogs.controllers");
 const newsControllers = require("../Controllers/news.controllers");
 const passwordControllers = require("../Controllers/password.controllers");
 const translateControllers = require("../Controllers/translator.controllers");
 const contactInterviewExperiencesControllers = require("../Controllers/contactInterviewExperiences.controllers");
+const askQuestionControllers = require("../Controllers/askQuestion.controllers");
 const bodyParser = require("body-parser").json({ limit: "50mb" });
 const router = require("express").Router();
 
@@ -25,13 +27,22 @@ router.post(
   contactInterviewExperiencesControllers.newsSubscription
 );
 
+router.post("/ask-question", bodyParser, askQuestionControllers.addQuestion);
+router.post("/add-comment", bodyParser, commentsControllers.addComment);
+
 router.get(
   "/reset-password",
   bodyParser,
   passwordControllers.validatePasswordResetToken
 );
 router.get("/blogsData", blogControllers.getAllBlogs);
+router.get("/allqna", askQuestionControllers.getAllQuestions);
 router.get("/news", bodyParser, newsControllers.getNews);
+router.get(
+  "/getComments",
+  bodyParser,
+  commentsControllers.getAllCommentsForTitle
+);
 
 router.patch("/reset-password", bodyParser, passwordControllers.resetPassword);
 router.patch(
