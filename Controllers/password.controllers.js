@@ -1,8 +1,9 @@
+require("dotenv").config();
 const User = require("../Models/user");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const argon2 = require("argon2");
-require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const forgotPassword = async (req, res) => {
   let status = 200;
@@ -97,4 +98,62 @@ const resetPassword = async (req, res) => {
   return res.status(resStatusCode).send(resMessage);
 };
 
-module.exports = { forgotPassword, validatePasswordResetToken, resetPassword };
+const resetPasswordSetting = async (req, res) => {
+  let resStatusCode = 200;
+  let resMessage = "Password updated successfully.";
+  console.log("called");
+  try {
+    User.init();
+    let { oldPassword, newPassword, token } = req.body;
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        console.log("err in jwt");
+        console.log(err);
+        return res.status(403).send("Invalid token.");
+      }
+      console.log(1);
+      const email = decoded.email;
+      try {
+        User.findOne({ email: email }, async (err, user) => {
+          if (err) {
+            console.log("err in user");
+            console.log(err);
+            return res
+              .status(403)
+              .send("User with given wmail doesnst exit.Invalid token.");
+          }
+          if (user) {
+            const validPassword = await argon2.verify(
+              user.password,
+              oldPassword
+            );
+            if (!validPassword) {
+              return res.status(403).send("Invalid password.");
+            }
+            newPassword = await argon2.hash(newPassword);
+            await User.updateOne(
+              {
+                email: email,
+              },
+              { password: newPassword }
+            );
+          }
+        });
+      } catch (err) {
+        console.log(err);
+        return res.status(500).send("An unknown error occurred.");
+      }
+    });
+  } catch (error) {
+    resStatusCode = 500;
+    resMessage = "An unknown error occurred.";
+  }
+  return res.status(resStatusCode).send(resMessage);
+};
+
+module.exports = {
+  forgotPassword,
+  validatePasswordResetToken,
+  resetPassword,
+  resetPasswordSetting,
+};

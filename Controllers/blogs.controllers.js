@@ -6,8 +6,8 @@ require("dotenv").config();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  api_key: process.env.CLOUDINARY_API_KEY, // id
+  api_secret: process.env.CLOUDINARY_API_SECRET, // password -- proves
 });
 
 const createBlog = async (req, res) => {
@@ -70,6 +70,7 @@ const createBlog = async (req, res) => {
 
 const getAllBlogs = async (req, res) => {
   const { token } = req.query;
+  // const { token } = req.body;
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
       console.log("err in jwt");
@@ -106,4 +107,14 @@ const deleteBlog = async (req, res) => {
   });
 };
 
-module.exports = { createBlog, getAllBlogs, deleteBlog };
+const getAllBlogTitles = async () => {
+  try {
+    const blogs = await Blog.find({}, { title: 1, _id: 0 });
+    return blogs;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+module.exports = { createBlog, getAllBlogs, deleteBlog, getAllBlogTitles };
