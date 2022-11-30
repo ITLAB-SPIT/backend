@@ -74,6 +74,7 @@ const getAllBlogs = async (req, res) => {
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
       console.log("err in jwt");
+      console.log(token);
       console.log(err);
       return res.status(403).send("Invalid token.");
     }
