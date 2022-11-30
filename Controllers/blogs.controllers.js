@@ -69,7 +69,10 @@ const createBlog = async (req, res) => {
 };
 
 const getAllBlogs = async (req, res) => {
-  const { token } = req.query;
+  let token = req.query.token;
+  if (!token) {
+    token = req.headers["token"].split(" ")[1];
+  }
   // const { token } = req.body;
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
