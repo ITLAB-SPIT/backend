@@ -6,6 +6,7 @@ const passwordControllers = require("../Controllers/password.controllers");
 const translateControllers = require("../Controllers/translator.controllers");
 const contactInterviewExperiencesControllers = require("../Controllers/contactInterviewExperiences.controllers");
 const askQuestionControllers = require("../Controllers/askQuestion.controllers");
+const jobsDataControllers = require("../Controllers/jobsData.controllers");
 const bodyParser = require("body-parser").json({ limit: "50mb" });
 const router = require("express").Router();
 
@@ -43,6 +44,7 @@ router.get(
   bodyParser,
   commentsControllers.getAllCommentsForTitle
 );
+router.get("/getJobsData", bodyParser, jobsDataControllers.getJobsData);
 
 router.patch("/reset-password", bodyParser, passwordControllers.resetPassword);
 router.patch(

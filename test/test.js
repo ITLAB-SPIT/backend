@@ -1,29 +1,35 @@
 let chai = require("chai");
 let chaiHttp = require("chai-http");
-var mocha = require("mocha");
+let mocha = require("mocha");
 // var describe = mocha.describe;
 // var it = mocha.it;
+chai.use(chaiHttp);
 var assert = require("chai").assert;
 let app = require("../app");
-let should = chai.should();
+chai.should();
 
-let bnbID = "636ba27e36fa9b9069f5888a";
 let token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haWwuc2h1YmhhbWdvbHdhbEBnbWFpbC5jb20iLCJpYXQiOjE2Njk4MTIxODQsImV4cCI6MTY2OTgxMzk4NH0.00PiayD6MqXY-MKc9lxLO9BYCtDVLGm9_6pXHVFiR6Y";
 
 chai.use(chaiHttp);
 
 describe("Validate Event", () => {
-  describe("Test 1 : Getting blogs", () => {
-    it("The blogs should be fetched", async () => {
-      await chai
+  describe("Test 1 : Posts are getting created", () => {
+    it("Posts shouls created", (done) => {
+      chai
         .request("http://localhost:8000")
         .get("/blogsData/")
-        // set in params the token
-        .set(token, { type: "bearer" })
-        .then((res) => {
-          chai.expect(res).to.have.status(200);
+        .set({ Authorization: `${token}` })
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
         });
+      // .then((res) => {
+      //   // chai.expect(res).to.have.status(200);
+      //   // done();
+      //   res.should.have.status(200);
+      //   done();
+      // })
     });
   });
 
