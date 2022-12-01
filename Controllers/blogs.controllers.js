@@ -70,6 +70,7 @@ const createBlog = async (req, res) => {
 
 const getAllBlogs = async (req, res) => {
   let token = req.query.token;
+  // console.log(token);
   if (!token) {
     token = req.headers["token"].split(" ")[1];
   }
