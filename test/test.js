@@ -9,7 +9,7 @@ let app = require("../app");
 chai.should();
 
 let token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1haWwuc2h1YmhhbWdvbHdhbEBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NjcwOTgsImV4cCI6MTY2OTg2ODg5OH0.jPyNr_Ibm5hyW7-sdC8jqZ4WekP3Xd-Jy35F48GLpx0";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNocmV5YXNoYi5kaGFtYW5lMEBnbWFpbC5jb20iLCJpYXQiOjE2Njk4NzA5NTUsImV4cCI6MTY2OTg3Mjc1NX0.9UT8oK4wAvUFYKJtVuxeeUmheNSsp7DTill5qfrXyeY";
 
 chai.use(chaiHttp);
 

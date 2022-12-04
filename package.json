@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "test": "mocha --timeout 10000"
+    "test": "mocha --timeout 10000",
+    "build": "webpack",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
